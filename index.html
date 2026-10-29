@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مدارس العصر – ألعاب تعليمية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --blue: #2f83c5;
+  --blue-deep: #175c91;
+  --blue-soft: #eaf5fd;
+  --blue-pale: #f5faff;
+  --ink: #20394c;
+  --muted: #647d90;
+  --line: #d7e8f4;
+  --green: #23885c;
+  --red: #b74545;
+  --gold: #f4c664;
+  --shadow: 0 12px 32px rgba(37, 91, 128, .09);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  position: relative;
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(ellipse at 92% 9%, rgba(196, 228, 249, .45), transparent 28rem),
+    #f6faff;
+  color: var(--ink);
+  font: 18px/1.7 Cairo, Tahoma, sans-serif;
+}
+body::before {
+  position: fixed;
+  z-index: 0;
+  inset: -35%;
+  background:
+    radial-gradient(ellipse at 18% 28%, rgba(181, 220, 244, .15), transparent 25%),
+    radial-gradient(ellipse at 76% 74%, rgba(196, 228, 249, .18), transparent 28%);
+  content: "";
+  pointer-events: none;
+  animation: ambient-drift 24s ease-in-out infinite alternate;
+}
+button, input { font: inherit; }
+button { color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+button:active { transform: scale(.98); }
+button:focus-visible, input:focus-visible {
+  outline: 4px solid var(--gold);
+  outline-offset: 3px;
+}
+.topbar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px max(24px, calc((100% - 1180px) / 2));
+  background: rgba(255, 255, 255, .96);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 4px 18px rgba(30, 78, 111, .04);
+  animation: bar-enter .55s ease-out both;
+}
+.brand-mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 0 62px;
+  width: 62px;
+  height: 62px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--blue-soft);
+}
+.brand-mark img { width: 100%; height: 100%; object-fit: contain; transition: transform .35s ease; }
+.brand-mark:hover img { transform: scale(1.08) rotate(-2deg); }
+.brand-fallback { position: absolute; inset: 0; display: grid; place-items: center; color: var(--blue-deep); font-size: 30px; font-weight: 800; pointer-events: none; }
+.brand-fallback[hidden] { display: none; }
+.brand-copy { flex: 1; min-width: 175px; }
+.brand-copy h1 { margin: 0; color: var(--blue-deep); font-size: 25px; line-height: 1.3; font-weight: 800; }
+.brand-copy p { margin: 3px 0 0; color: var(--muted); font-size: 15px; }
+.teacher-badge { display: grid; gap: 0; min-width: 185px; padding: 8px 15px; border-right: 3px solid #78b9e3; border-radius: 0 12px 12px 0; background: var(--blue-pale); }
+.teacher-badge span { color: var(--muted); font-size: 13px; font-weight: 700; }
+.teacher-badge strong { color: var(--blue-deep); font-size: 21px; line-height: 1.45; }
+.nm { display: grid; gap: 3px; min-width: 220px; color: var(--muted); font-size: 14px; font-weight: 700; }
+.nm input {
+  width: 100%;
+  min-height: 46px;
+  padding: 8px 13px;
+  color: var(--ink);
+  border: 1px solid #c8ddeb;
+  border-radius: 12px;
+  background: #fbfdff;
+}
+.nm input::placeholder { color: #8da1b0; }
+main { position: relative; z-index: 1; width: min(1120px, 100%); min-height: 70vh; margin: 0 auto; padding: 28px 24px 56px; }
+.welcome {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: clamp(24px, 5vw, 46px);
+  border: 1px solid #d5e9f7;
+  border-radius: 26px;
+  background: linear-gradient(115deg, #fff 25%, #f0f8fe 100%);
+  box-shadow: var(--shadow);
+  animation: card-enter .58s cubic-bezier(.2,.7,.25,1) both;
+}
+.welcome::after {
+  position: absolute;
+  left: -38px;
+  bottom: -96px;
+  width: 220px;
+  height: 220px;
+  border: 28px solid rgba(115, 181, 224, .12);
+  border-radius: 50%;
+  content: "";
+}
+.eyebrow { margin: 0 0 7px; color: var(--blue); font-size: 14px; font-weight: 800; letter-spacing: .03em; }
+.welcome h2 { margin: 0; color: #183e5b; font-size: clamp(26px, 4vw, 38px); line-height: 1.35; font-weight: 800; }
+.welcome p:not(.eyebrow) { max-width: 620px; margin: 10px 0 0; color: var(--muted); font-size: 17px; }
+.welcome-art {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  border: 1px solid #d5e9f7;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(37, 91, 128, .08);
+  color: var(--blue);
+  font-size: 49px;
+  animation: icon-float 4s ease-in-out infinite;
+}
+.landing {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  overflow: hidden;
+  padding: clamp(20px, 5vw, 58px);
+  background:
+    radial-gradient(ellipse at 10% 12%, rgba(196, 228, 249, .7), transparent 28rem),
+    radial-gradient(ellipse at 90% 90%, rgba(210, 235, 250, .55), transparent 30rem),
+    #f6faff;
+}
+.landing-card {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, .92fr);
+  align-items: center;
+  gap: clamp(24px, 5vw, 60px);
+  width: min(1120px, 100%);
+  padding: clamp(24px, 5vw, 58px);
+  border: 1px solid #d5e9f7;
+  border-radius: 32px;
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 26px 75px rgba(37, 91, 128, .12);
+  animation: landing-rise .75s ease-out both;
+}
+.landing-card::before {
+  position: absolute;
+  z-index: -1;
+  inset: 12px;
+  border: 1px solid rgba(115, 181, 224, .18);
+  border-radius: 24px;
+  content: "";
+  pointer-events: none;
+}
+.landing-copy { text-align: right; }
+.landing-copy h1 { margin: 0; color: #183e5b; font-size: clamp(30px, 5vw, 48px); line-height: 1.35; font-weight: 800; }
+.landing-copy h2 { margin: 12px 0 0; color: var(--blue-deep); font-size: clamp(21px, 3vw, 29px); }
+.landing-copy p { margin: 12px 0 0; color: var(--muted); font-size: 18px; }
+.landing-copy .teacher-line { margin-top: 20px; color: #315a76; font-size: 18px; font-weight: 700; }
+.landing-copy .teacher-line strong { display: block; color: var(--blue-deep); font-size: 25px; }
+.welcome-btn { min-height: 54px; margin-top: 24px; padding-inline: 25px; font-size: 18px; }
+.school-photo-wrap {
+  position: relative;
+  padding: 9px;
+  border: 1px solid #c8e2f3;
+  border-radius: 26px;
+  background: linear-gradient(140deg, #fff, #eaf5fd);
+  box-shadow: 0 16px 38px rgba(37, 91, 128, .13);
+  animation: photo-float 5s ease-in-out infinite;
+}
+.school-photo-wrap::before {
+  position: absolute;
+  z-index: -1;
+  inset: -10px;
+  border: 1px solid rgba(80, 157, 208, .27);
+  border-radius: 34px;
+  content: "";
+  animation: photo-ring 5s ease-in-out infinite;
+}
+.school-photo { display: block; width: 100%; aspect-ratio: 1.34; object-fit: cover; border-radius: 19px; }
+.landing[hidden], .app[hidden] { display: none; }
+.app { position: relative; z-index: 1; }
+.section { margin-top: 35px; animation: section-enter .55s ease-out both; animation-delay: calc(var(--section-index, 0) * 90ms); }
+.sec {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 0 0 15px;
+  color: #23465f;
+  font-size: 22px;
+  font-weight: 800;
+}
+.sec::after {
+  width: min(105px, 16vw);
+  height: 1px;
+  background: linear-gradient(90deg, #cce3f2, transparent);
+  content: "";
+}
+.sec::before { width: 5px; height: 26px; border-radius: 4px; background: var(--blue); content: ""; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+.tile {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-height: 105px;
+  padding: 18px;
+  text-align: right;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 5px 16px rgba(37, 91, 128, .035);
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, background .22s ease;
+  animation: tile-enter .48s cubic-bezier(.2,.7,.25,1) both;
+  animation-delay: calc(var(--tile-index, 0) * 38ms);
+}
+.tile::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 22%, rgba(255,255,255,.52) 48%, transparent 72%);
+  content: "";
+  transform: translateX(125%);
+  transition: transform .65s ease;
+  pointer-events: none;
+}
+.tile:hover { transform: translateY(-4px); border-color: #9dc9e7; background: #fcfeff; box-shadow: var(--shadow); }
+.tile:hover::after { transform: translateX(-125%); }
+.tile-icon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+  border-radius: 17px;
+  color: #267ab4;
+  background: linear-gradient(145deg, #eaf5fd, #dceef9);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.85), 0 4px 11px rgba(44, 113, 159, .08);
+  transition: color .22s ease, background .22s ease, transform .28s cubic-bezier(.2,.7,.25,1), box-shadow .22s ease;
+}
+.tile-icon svg {
+  display: block;
+  width: 34px;
+  height: 34px;
+  overflow: visible;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.2;
+  fill: none;
+}
+.tile-icon svg .icon-fill { fill: currentColor; fill-opacity: .12; stroke: none; }
+.tile:hover .tile-icon {
+  color: #fff;
+  background: linear-gradient(145deg, #58a5d6, #2777ad);
+  box-shadow: 0 7px 17px rgba(39, 119, 173, .22);
+  transform: rotate(-5deg) scale(1.06);
+}
+.tile-copy { position: relative; z-index: 1; display: grid; gap: 2px; }
+.tile-copy strong { color: #274c67; font-size: 17px; transition: color .2s ease; }
+.tile:hover .tile-copy strong { color: var(--blue-deep); }
+.tile-copy small { color: var(--muted); font-size: 13px; font-weight: 500; transition: color .2s ease; }
+.bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 4px 0 17px; }
+.bar { animation: section-enter .38s ease-out both; }
+.bar h2 { flex: 1; margin: 0; color: var(--blue-deep); font-size: 25px; }
+.bk, .nxt {
+  min-height: 48px;
+  padding: 9px 18px;
+  color: #fff;
+  border: 0;
+  border-radius: 12px;
+  background: var(--blue-deep);
+  font-weight: 800;
+  transition: background .16s ease, transform .16s ease;
+}
+.bk:hover, .nxt:hover { transform: translateY(-1px); background: #124d7b; }
+.bk:active, .nxt:active, .tile:active, .opt:active { transform: scale(.98); }
+.cnt { padding: 5px 13px; color: var(--blue-deep); border: 1px solid var(--line); border-radius: 20px; background: #fff; font-size: 15px; font-weight: 800; }
+.card { padding: clamp(18px, 4vw, 30px); border: 1px solid var(--line); border-radius: 22px; background: #fff; box-shadow: var(--shadow); animation: card-enter .42s ease-out both; }
+.q { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; text-align: center; }
+.q p { margin: 5px 0; color: #24465f; font-size: clamp(22px, 3.5vw, 29px); font-weight: 800; }
+.sp {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid #cfe3f1;
+  border-radius: 15px;
+  background: var(--blue-pale);
+  font-size: 23px;
+  transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+}
+.sp:hover { transform: translateY(-2px); background: #e6f3fc; box-shadow: 0 5px 13px rgba(37, 91, 128, .11); }
+.big { font-size: 76px; line-height: 1.15; }
+.big img, .big svg { max-width: 100%; max-height: 145px; }
+.opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; margin-top: 20px; }
+.opt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  min-height: 78px;
+  padding: 13px;
+  text-align: center;
+  border: 2px solid #d7e9f5;
+  border-radius: 16px;
+  background: #f7fbfe;
+  font-size: 19px;
+  font-weight: 700;
+  transition: border-color .2s ease, background .2s ease, transform .2s ease, box-shadow .2s ease;
+  animation: option-enter .34s ease-out both;
+  animation-delay: calc(var(--item-index, 0) * 32ms);
+}
+.opt:hover:not(:disabled) { transform: translateY(-2px); border-color: #8ebfe0; background: #edf7fd; box-shadow: 0 7px 16px rgba(37, 91, 128, .08); }
+.opt:disabled { cursor: default; }
+.opt.ok { border-color: #83c7a6; background: #eaf7f0; }
+.opt.no { border-color: #e1a3a3; background: #fff0ef; color: #805252; }
+.opt img, .opt svg { max-width: 130px; max-height: 76px; }
+.em { font-size: 40px; }
+.pic { max-width: 130px; max-height: 82px; padding: 3px; border: 1px solid #e0edf5; border-radius: 12px; background: #fff; object-fit: contain; animation: image-in .38s ease-out both; }
+#msg { min-height: 32px; margin: 12px 0 0; color: var(--blue-deep); text-align: center; font-weight: 700; }
+.strip { display: flex; gap: 8px; flex-wrap: wrap; min-height: 56px; margin: 14px 0; padding: 9px; border: 2px dashed #bfd9eb; border-radius: 14px; background: var(--blue-pale); }
+.chip { display: inline-block; padding: 5px 12px; border: 1px solid #c9e0ef; border-radius: 10px; background: #fff; font-weight: 700; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 14px; }
+.zone { min-height: 150px; padding: 14px; text-align: center; border: 1px solid var(--line); border-radius: 17px; background: var(--blue-pale); animation: card-enter .42s ease-out both; }
+.pzl { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; max-width: 440px; margin: 16px auto; direction: ltr; }
+.pc { overflow: hidden; padding: 0; border: 3px solid #d1e4f1; border-radius: 10px; background: #fff; animation: option-enter .34s ease-out both; animation-delay: calc(var(--item-index, 0) * 55ms); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+.pc:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(37, 91, 128, .1); }
+.pc.sel { border-color: #d99a1c; box-shadow: 0 0 0 3px #f7e8bd; }
+.pc svg { display: block; width: 100%; }
+.flagbox { max-width: 480px; margin: 16px auto; direction: ltr; }
+.flagbox [data-r] { cursor: pointer; }
+.pal { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin: 18px 0; }
+.sw { width: 46px; height: 46px; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 0 0 2px #cbdce8; }
+.sw.on { box-shadow: 0 0 0 4px #d99a1c; }
+.mas { display: block; margin: 12px auto; border: 0; border-radius: 22px; background: var(--blue-pale); }
+.mas svg { width: 165px; }
+.bub { max-width: 470px; margin: 12px auto; padding: 13px 18px; text-align: center; border: 1px solid #cfe3f1; border-radius: 16px; background: var(--blue-soft); font-size: 21px; font-weight: 700; }
+table { width: 100%; margin: 14px 0; border-collapse: collapse; }
+td, th { padding: 12px; text-align: center; border: 1px solid var(--line); }
+th { background: var(--blue-soft); }
+.notice { margin: 14px 0 0; padding: 13px 16px; border: 1px solid #d4e6f3; border-radius: 13px; background: #f4f9fd; color: #45677e; }
+.anthem-frame {
+  position: relative;
+  max-width: 790px;
+  margin: 20px auto;
+  padding: 7px;
+  border: 1px solid #c7dfef;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #fff, #e4f2fb, #fff);
+  box-shadow: 0 12px 32px rgba(37, 91, 128, .11);
+  animation: card-enter .48s ease-out both;
+}
+.anthem-frame::before { position: absolute; z-index: -1; inset: -5px; border: 1px solid rgba(75, 153, 205, .25); border-radius: 26px; content: ""; }
+.anthem-title { margin: 0 0 9px; color: var(--blue-deep); text-align: center; font-size: 20px; font-weight: 800; }
+.anthem-player { display: block; width: 100%; max-height: 440px; border-radius: 15px; background: #152b3b; }
+#ov { position: fixed; inset: 0; z-index: 9; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(20, 46, 65, .56); }
+#ov[hidden] { display: none; }
+.ovc { width: min(460px, 100%); padding: 22px; text-align: center; border: 1px solid #d4e7f4; border-radius: 24px; background: #fff; box-shadow: 0 22px 65px rgba(10, 35, 54, .23); animation: appear .24s ease-out; }
+.ovc svg { width: 138px; }
+.praise-boy { display: block; width: min(154px, 42vw); height: 154px; margin: 0 auto 8px; object-fit: contain; animation: icon-float 2.8s ease-in-out infinite; }
+.ovc .bub { font-size: 23px; }
+@keyframes appear { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+footer { padding: 18px 24px; text-align: center; color: var(--muted); font-size: 14px; animation: section-enter .65s ease-out both; }
+@media (max-width: 680px) {
+  .topbar { flex-wrap: wrap; gap: 11px; padding: 12px 18px; }
+  .brand-mark { flex-basis: 52px; width: 52px; height: 52px; }
+  .brand-copy h1 { font-size: 21px; }
+  .brand-copy p { font-size: 13px; }
+  .teacher-badge { flex: 1; min-width: 150px; }
+  .teacher-badge strong { font-size: 18px; }
+  .nm { flex: 1 0 100%; }
+  main { padding: 20px 16px 40px; }
+  .welcome { grid-template-columns: minmax(0, 1fr) 64px; padding: 23px 18px; border-radius: 20px; }
+  .welcome-art { width: 60px; height: 60px; border-radius: 18px; font-size: 33px; }
+  .welcome p:not(.eyebrow) { font-size: 15px; }
+  .grid { grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 10px; }
+  .tile { min-height: 92px; gap: 10px; padding: 12px; }
+  .tile-icon { flex-basis: 48px; width: 48px; height: 48px; border-radius: 14px; font-size: 25px; }
+  .tile-copy strong { font-size: 15px; }
+  .tile-copy small { font-size: 12px; }
+  .landing { padding: 16px; }
+  .landing-card { grid-template-columns: 1fr; gap: 23px; padding: 22px; border-radius: 24px; }
+  .landing-copy { text-align: center; }
+  .school-photo-wrap { width: min(100%, 470px); margin: 0 auto; }
+  .school-photo { aspect-ratio: 1.5; }
+}
+@keyframes landing-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes photo-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes photo-ring { 0%, 100% { opacity: .48; transform: scale(1); } 50% { opacity: .9; transform: scale(1.012); } }
+@keyframes image-in { from { opacity: .55; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
+@keyframes ambient-drift { from { transform: translate3d(-1.5%, -1%, 0) rotate(-2deg); } to { transform: translate3d(1.5%, 1%, 0) rotate(2deg); } }
+@keyframes bar-enter { from { opacity: 0; transform: translateY(-7px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes card-enter { from { opacity: 0; transform: translateY(12px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes section-enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes tile-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes option-enter { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes icon-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<section class="landing" id="landing" aria-labelledby="landing-title">
+  <div class="landing-card">
+    <div class="landing-copy">
+      <p class="eyebrow">مدارس العصر ترحّب بكم</p>
+      <h1 id="landing-title">أهلًا وسهلًا بالسادة الضيوف</h1>
+      <h2>وبالأستاذة سمية، مديرة المدرسة</h2>
+      <p>يسعدنا حضوركم ومشاركتكم أبناءنا رحلة التعلّم والإنجاز.</p>
+      <p class="teacher-line">تقديم المعلمة<strong>هبة عبد اللطيف</strong></p>
+      <button class="nxt welcome-btn" id="enter-site">ابدأ الجولة التعليمية <span aria-hidden="true">←</span></button>
+    </div>
+    <div class="school-photo-wrap">
+      <img class="school-photo" src="WhatsApp Image 2026-10-29 at 3.51.22 PM.jpeg" alt="مبنى مدارس العصر" onerror="this.hidden=true">
+    </div>
+  </div>
+</section>
+<div class="app" id="app" hidden>
+  <header class="topbar">
+    <div class="brand-mark">
+      <img src="WhatsApp Image 2026-10-29 at 3.51.22 PM.jpeg" alt="شعار مدارس العصر" onload="this.nextElementSibling.hidden=true" onerror="this.hidden=true">
+      <span class="brand-fallback" aria-hidden="true">ع</span>
+    </div>
+    <div class="brand-copy"><h1>مدارس العصر</h1><p>نتعلّم ونلعب</p></div>
+    <div class="teacher-badge"><span>المعلمة</span><strong>هبة عبد اللطيف</strong></div>
+    <label class="nm">اسم الطالب أو الطالبة (اختياري)<input id="nm" type="text" autocomplete="off" maxlength="60" placeholder="اكتب اسمك هنا"></label>
+  </header>
+  <main id="stage" tabindex="-1"></main>
+  <footer>مدارس العصر – المعلمة هبة عبد اللطيف</footer>
+</div>
+<div id="ov" hidden></div>
+
+<script>
+/* ====== الإعدادات: عدّل المسارات هنا ====== */
+const IMG={king:'king-sallman.jpg',prince:'mo-sallman.jpg',flag:'KSA.jpg',swords:'KSA.jpg',palm:'KSA.jpg',
+riyadh:'',jeddah:'',dammam:'',heart:'KSA.jpg',quran:'Quran.jpg',
+school:'WhatsApp Image 2026-10-29 at 3.51.22 PM.jpeg',house:'',uniform:''};
+const MEDIA={anthemVideo:'saudi_anthem.mp4'};
+/* أضف هنا أسطر النشيد التي ستُستخدم في لعبة التكملة، سطرًا لكل عنصر. */
+const ANTHEM=[];
+const ST=['أحمد هزازي','عبد الله الفيفي','محمد البلوي','معاذ هزازي','فارس العطوي','عبد العزيز القبلي'];
+const ST2=['أحمد عسيري','وسام السبيعي','سلطان الريثي','علي ابو الذهب','محمد البارقي','خالد العمري','عبد العزيز العطوي'];
+/* ======================================== */
+
+const $=s=>document.querySelector(s),stage=$('#stage');let name='';
+$('#nm').oninput=e=>name=e.target.value.trim();
+$('#enter-site').onclick=()=>{$('#landing').hidden=true;$('#app').hidden=false;home();stage.focus()};
+const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const PRX=['ما شاء الله عليك، كمّل كذا!','أنت بطل وربي!','يعطيك العافية!','فخورين فيك!','حلو منك، استمر!'];
+const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const O=(t,e,k)=>({t,e,k});
+const fb=i=>{i.replaceWith(document.createTextNode(i.dataset.e||'📷'))};
+const pic=(k,e)=>k&&IMG[k]?`<img class="pic" src="${IMG[k]}" alt="" data-e="${e||''}" onerror="fb(this)">`:(e?`<span class="em">${e}</span>`:'');
+const escapeHTML=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const say=t=>{
+  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){msg('ميزة القراءة الصوتية غير متاحة في هذا المتصفح.');return}
+  try{
+    speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ar-SA';u.rate=.85;
+    u.onerror=()=>msg('تعذّرت القراءة الصوتية. يمكنك متابعة النشاط بالقراءة.');
+    speechSynthesis.speak(u);
+  }catch(e){msg('تعذّرت القراءة الصوتية. يمكنك متابعة النشاط بالقراءة.')}
+};
+const msg=t=>{const m=$('#msg');if(m)m.textContent=t};
+const head=(t,s)=>`<div class="bar"><button class="bk" onclick="home()">🏠 القائمة</button><h2>${t}</h2>${s||''}</div>`;
+const videoFrame=()=>`<div class="anthem-frame"><p class="anthem-title">النشيد الوطني السعودي</p><video class="anthem-player" controls playsinline preload="metadata" poster="${IMG.flag}" aria-label="فيديو النشيد الوطني السعودي" src="${encodeURI(MEDIA.anthemVideo)}">متصفحك ما يدعم تشغيل الفيديو.</video></div>`;
+const bindVideoErrors=()=>stage.querySelectorAll('.anthem-player').forEach(player=>player.addEventListener('error',()=>{
+  const frame=player.closest('.anthem-frame');
+  if(frame&&!frame.querySelector('.media-error')){
+    const note=document.createElement('p');note.className='notice media-error';note.setAttribute('role','status');
+    note.textContent='تعذّر تشغيل الفيديو. تأكدي من وجود ملف النشيد بجانب index.html وبالاسم نفسه في MEDIA.anthemVideo.';
+    frame.append(note);
+  }
+}));
+
+const BOY=`<svg viewBox="0 0 120 150" role="img" aria-label="شخصية ولد سعودي">
+<rect x="30" y="86" width="60" height="58" rx="16" fill="#fff" stroke="#1769AA" stroke-width="3"/>
+<circle cx="60" cy="55" r="27" fill="#F2C9A0" stroke="#1769AA" stroke-width="3"/>
+<path d="M28 58Q26 18 60 18Q94 18 92 58L92 70Q86 44 60 44Q34 44 28 70Z" fill="#fff" stroke="#1769AA" stroke-width="3"/>
+<path d="M33 34Q60 20 87 34" fill="none" stroke="#222" stroke-width="6" stroke-linecap="round"/>
+<circle cx="50" cy="58" r="3.5" fill="#222"/><circle cx="70" cy="58" r="3.5" fill="#222"/>
+<path d="M50 70Q60 79 70 70" fill="none" stroke="#B3401F" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M92 100L108 78" stroke="#F2C9A0" stroke-width="10" stroke-linecap="round"/></svg>`;
+
+function ok(cb,line){
+  const w=name?`أحسنت يا ${escapeHTML(name)}!`:'أحسنت! أنت بطل!';
+  $('#ov').innerHTML=`<div class="ovc" role="dialog" aria-modal="true" aria-live="polite"><img class="praise-boy" src="chracter.png" alt="شخصية تشجّعك"><div class="bub"><b>${w}</b><br>${line||PRX[Math.floor(Math.random()*PRX.length)]}</div><button class="nxt" id="nx">التالي ◀</button></div>`;
+  $('#ov').hidden=false;$('#nx').focus();
+  $('#nx').onclick=()=>{$('#ov').hidden=true;cb&&cb()};
+}
+const fin=t=>ok(home,`خلّصت لعبة «${t}» كاملة! أنت نجم ⭐`);
+
+function quiz(t,qs,done,intro=''){let i=0;(function nx(){
+  if(i>=qs.length)return done?done():home();
+  const q=qs[i],os=shuf(q.o.map((o,j)=>({...o,r:q.anyCorrect||j===q.a})));
+  stage.innerHTML=head(t,`<span class="cnt">${i+1} / ${qs.length}</span>`)+(intro||'')+
+  `<div class="card"><div class="q">${q.p?`<div class="big">${q.p.h||pic(q.p[0],q.p[1])}</div>`:''}<p>${q.q}</p><button class="sp" aria-label="اسمع السؤال" data-s="${q.q}" onclick="say(this.dataset.s)">🔊</button></div>
+  <div class="opts">${os.map((o,j)=>`<button class="opt" style="--item-index:${j}" data-j="${j}">${o.h||pic(o.k,o.e)}<b>${o.t||''}</b></button>`).join('')}</div><p id="msg" role="status"></p></div>`;
+  bindVideoErrors();
+  stage.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const o=os[b.dataset.j];
+    if(o.r){b.classList.add('ok');ok(()=>{i++;if(i===qs.length&&!done)home();else nx()})}else{b.classList.add('no');b.disabled=true;msg('قريب! جرّب مرة ثانية 💪')}}); 
+})()}
+
+function seq(t,items,done,hint){let p=0,used=[];const L=shuf(items);
+  const dr=()=>{stage.innerHTML=head(t)+`<div class="card"><p class="q"><b>${hint}</b></p><div class="strip" aria-label="ترتيبك">${items.slice(0,p).map(x=>`<span class="chip">${x.t}</span>`).join('')}</div>
+  <div class="opts">${L.map((x,j)=>`<button class="opt" style="--item-index:${j}" data-j="${j}" ${used.includes(j)?'disabled':''}><span class="em">${x.e||''}</span><b>${x.t}</b></button>`).join('')}</div><p id="msg" role="status"></p></div>`;
+  stage.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const j=+b.dataset.j;
+    if(L[j].t===items[p].t){used.push(j);p++;if(p===items.length){dr();done?done():fin(t)}else dr()}else{b.classList.add('no');msg('مو هذا الحين، جرّب غيره 💪')}})};
+  dr()}
+
+const FL=(vb,blank)=>`<svg viewBox="${vb||'0 0 300 200'}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="علم السعودية">
+<rect data-r width="300" height="200" style="fill:${blank?'#fff':'#006C35'}" ${blank?'stroke="#1769AA" stroke-width="3"':''}/>
+<text data-r x="150" y="88" text-anchor="middle" font-size="25" font-weight="800" font-family="Cairo,Tahoma" style="fill:${blank?'#bcc7d0':'#fff'}">لا إله إلا الله محمد رسول الله</text>
+<g data-r style="fill:${blank?'#bcc7d0':'#fff'}"><polygon points="55,142 68,135 215,135 215,149 68,149"/><rect x="215" y="124" width="9" height="36" rx="3"/><rect x="224" y="138" width="26" height="8" rx="4"/></g></svg>`;
+const stripes=(a,b,c)=>`<svg viewBox="0 0 90 60" width="120"><rect width="90" height="20" fill="${a}"/><rect y="20" width="90" height="20" fill="${b}"/><rect y="40" width="90" height="20" fill="${c}"/></svg>`;
+const FS=FL().replace('role="img" aria-label="علم السعودية"','width="130"');
+
+function pz(){let o=[0,1,2,3],s=-1;do{o=shuf(o)}while(o.every((v,i)=>v===i));
+  const VB=['0 0 150 100','150 0 150 100','0 100 150 100','150 100 150 100'];
+  const dr=()=>{stage.innerHTML=head('ركّب العلم')+`<div class="card"><p class="q"><b>اضغط على قطعتين عشان تبدّل مكانهم، لين يكتمل علم السعودية</b></p><div class="pzl">${o.map((v,i)=>`<button class="pc ${s===i?'sel':''}" style="--item-index:${i}" data-i="${i}" aria-label="قطعة ${i+1}">${FL(VB[v])}</button>`).join('')}</div></div>`;
+    stage.querySelectorAll('.pc').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;
+      if(s<0)s=i;else{[o[s],o[i]]=[o[i],o[s]];s=-1}
+      dr();if(o.every((v,k)=>v===k))fin('ركّب العلم')})};dr()}
+
+function col(){let c='#006C35';const P=['#006C35','#FFFFFF','#FFD93D','#E53935','#1E88E5','#212121','#FF9800','#8E24AA'];
+  stage.innerHTML=head('لوّن العلم')+`<div class="card"><p class="q"><b>اختر لون، وبعدين اضغط على الجزء اللي تبغى تلوّنه</b></p><div class="pal">${P.map(x=>`<button class="sw ${x===c?'on':''}" style="background:${x}" data-c="${x}" aria-label="لون"></button>`).join('')}</div><div class="flagbox">${FL('0 0 300 200',1)}</div><div style="text-align:center"><button class="nxt" id="dn">خلّصت التلوين ✅</button></div></div>`;
+  stage.querySelectorAll('.sw').forEach(b=>b.onclick=()=>{c=b.dataset.c;stage.querySelectorAll('.sw').forEach(x=>x.classList.toggle('on',x===b))});
+  stage.querySelectorAll('[data-r]').forEach(e=>{
+    e.setAttribute('role','button');e.setAttribute('tabindex','0');e.setAttribute('aria-label','جزء من العلم، اضغط لتلوينه');
+    const paint=()=>e.style.fill=c;
+    e.onclick=paint;e.onkeydown=ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();paint()}}
+  });
+  $('#dn').onclick=()=>fin('لوّن العلم')}
+
+function af(){
+  const lines=ANTHEM.map(line=>line.trim()).filter(Boolean);
+  if(lines.length<3){
+    stage.innerHTML=head('كمّل النشيد')+`<div class="card">${videoFrame()}<div class="q"><span class="em">🎵</span><p>لعبة تكملة النشيد جاهزة للإعداد</p></div>
+    <p class="notice">أضيفي ٣ أسطر أو أكثر في قائمة <b>ANTHEM</b> أعلى الملف، كل سطر بين علامتي اقتباس. الفيديو أعلاه يشغّل الملف المحدد في <b>MEDIA.anthemVideo</b>.</p>
+    <p id="msg" role="status"></p></div>`;
+    bindVideoErrors();
+    return;
+  }
+  const qs=[];for(let i=1;i<lines.length;i++){const w=shuf(lines.filter((_,j)=>j!==i&&j!==i-1)).slice(0,2);
+  qs.push({q:'كمّل النشيد: '+lines[i-1],o:[{t:lines[i]},...w.map(t=>({t}))],a:0})}
+  quiz('كمّل النشيد',qs,undefined,videoFrame())}
+
+function al(){stage.innerHTML=head('أنا سامعك')+`<div class="card" style="text-align:center">${videoFrame()}<p class="q"><b>اضغط على صاحبك وقول النشيد الوطني!</b></p><button class="mas" id="mb" aria-label="اضغط على الشخصية">${BOY}</button><div class="bub" id="bb" hidden>أنا سامعك.. يلا قول النشيد! 🎤</div>
+  <button class="nxt" id="en" hidden>انتهيت ✅</button></div>`;
+  bindVideoErrors();
+  $('#mb').onclick=()=>{$('#bb').hidden=false;$('#en').hidden=false;say('أنا سامعك، يلا قول النشيد')};
+  $('#en').onclick=()=>ok(home,'ما شاء الله! قلت النشيد الوطني يا بطل 💚')}
+
+const today=new Date(),fd=d=>`${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+
+function att(roster=ST,title='لوحة الحضور'){let ph=0,P=[],A=[],saveWarning='';
+  const dr=()=>{const left=roster.filter(n=>!P.includes(n)&&!A.includes(n));
+    if(ph===1&&!left.length)return board();
+    stage.innerHTML=head(title)+`<div class="card"><p class="q"><b>${ph?'الباقين غايبين.. اضغط على اسم الغايب عشان يروح البيت':'اضغط على اسم كل صديق حاضر عشان يدخل المدرسة'}</b></p>
+    <div class="two"><div class="zone"><div class="big">${pic('school','🏫')}</div><p><b>المدرسة</b></p>${P.map(n=>`<span class="chip">${n}</span> `).join('')}</div>
+    ${ph?`<div class="zone"><div class="big">${pic('house','🏠')}</div><p><b>البيت</b></p>${A.map(n=>`<span class="chip">${n}</span> `).join('')}</div>`:''}</div>
+    <div class="opts">${left.map((n,i)=>`<button class="opt" style="--item-index:${i}" data-n="${n}"><b>${n}</b></button>`).join('')}</div>
+    ${ph?'':`<div style="text-align:center;margin-top:14px"><button class="nxt" id="go">خلّصت الحاضرين ◀</button></div>`}</div>`;
+    stage.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{(ph?A:P).push(b.dataset.n);if(!ph&&P.length===roster.length)ph=1;dr()});
+    if(!ph)$('#go').onclick=()=>{ph=1;dr()}};
+  const board=()=>{try{localStorage.setItem(`att-${title}-${fd(today)}`,JSON.stringify({P,A}))}catch(e){saveWarning='تعذّر حفظ لوحة الحضور على هذا الجهاز، لكن تقدرون تكملون النشاط.'}
+    stage.innerHTML=head(title)+`<div class="card"><table><tr><th colspan="2">${DAYS[today.getDay()]} – ${fd(today)}</th></tr><tr><th>✅ الحاضرون (${P.length})</th><th>❌ الغايبون (${A.length})</th></tr>
+    <tr><td>${P.join('<br>')||'—'}</td><td>${A.join('<br>')||'—'}</td></tr></table>${saveWarning?`<p class="notice" role="status">${saveWarning}</p>`:''}<div style="text-align:center"><button class="nxt" id="go">التالي ◀</button></div></div>`;
+    $('#go').onclick=()=>quiz('لوحة الحضور',[{q:'كم عدد أصدقائك الحاضرين اليوم؟ اختَر العدد الصحيح',o:Array.from({length:10},(_,i)=>({t:String(i+1),e:'🧒'})),anyCorrect:true}])};
+  dr()}
+
+const G=[
+{t:'كمّل النشيد',i:'anthem',f:af},
+{t:'أنا سامعك',i:'voice',f:al},
+{t:'ما اسم وطني؟',i:'flag',f:()=>quiz('ما اسم وطني؟',[{q:'ما اسم وطني؟',p:['flag','🇸🇦'],o:[O('المملكة العربية السعودية','🕌'),O('جمهورية مصر','🌍'),O('دولة الكويت','🌍')],a:0}])},
+{t:'اختر العلم',i:'identify',f:()=>quiz('اختر العلم',[
+ {q:'أي علم هو علم السعودية؟',p:['flag','🇸🇦'],o:[{h:FS},{h:stripes('#CE1126','#fff','#000')},{h:stripes('#0055A4','#fff','#EF4135')}],a:0},
+ {q:'دوّر على علم السعودية',p:['flag','🇸🇦'],o:[{h:stripes('#000','#EF4135','#FFD700')},{h:FS},{h:stripes('#FF9933','#fff','#138808')}],a:1}])},
+{t:'ركّب العلم',i:'puzzle',f:pz},
+{t:'لوّن العلم',i:'palette',f:col},
+{t:'قادة بلادي',i:'leaders',f:()=>quiz('قادة بلادي',[
+ {q:'ما اسم ملكنا؟',p:['king','👑'],o:[O('الملك سلمان بن عبدالعزيز','👑','king'),O('الأمير أحمد بن علي','👤'),O('الأستاذ خالد بن سعد','👤')],a:0},
+ {q:'ما اسم ولي العهد؟',p:['prince','🤴'],o:[O('محمد بن سلمان','🤴','prince'),O('فيصل بن ناصر','👤'),O('سعود بن عبدالله','👤')],a:0},
+ {q:'ما لون علم بلادي؟',p:['flag','🟩'],o:[O('أخضر','🟩'),O('أحمر','🟥'),O('أزرق','🟦')],a:0},
+ {q:'ما هي عاصمة المملكة؟',p:['flag','🇸🇦'],o:[O('الرياض','🏙️','riyadh'),O('جدة','🌊','jeddah'),O('الدمام','🏭','dammam')],a:0}])},
+{t:'كلمة التوحيد',i:'tawheed',f:()=>quiz('كلمة التوحيد',[
+ {q:'ماذا كُتب على العلم؟',p:['flag','🟩'],o:[O('لا إله إلا الله محمد رسول الله','✨'),O('أنا أحب وطني','❤️'),O('صباح الخير','🌞')],a:0}],
+ ()=>seq('كلمة التوحيد',['لا','إله','إلا','الله','محمد','رسول','الله'].map(t=>({t})),()=>fin('كلمة التوحيد'),'رتّب الكلمات بالترتيب الصحيح عشان تكتمل كلمة التوحيد'))},
+{t:'رموز وديني',i:'palm',f:()=>quiz('رموز وديني',[
+ {q:'ماذا يدل السيفان؟',p:['swords','⚔️'],o:[O('القوة','💪'),O('الجمال','🌸'),O('السرعة','🏃')],a:0},
+ {q:'ماذا تدل النخلة؟',p:['palm','🌴'],o:[O('الرخاء والخير','🌴'),O('الخوف','😨'),O('الحزن','😢')],a:0},
+ {q:'الوطن هو المكان الذي نعيش فيه.. وطني وطن؟',p:['flag','🇸🇦'],o:[O('الأمن والأمان','🛡️'),O('الخوف','😨'),O('الحزن','😢')],a:0},
+ {q:'أنا أحب...',p:['flag','💚'],o:[O('وطني','💚','heart'),O('الكسل','😴'),O('الزعل','😠')],a:0},
+ {q:'من ربنا؟',o:[O('الله','🤲'),O('القمر','🌙'),O('الشمس','☀️')],a:0},
+ {q:'ما ديننا؟',o:[O('الإسلام','🕌'),O('لا شيء','❓'),O('غير ذلك','❓')],a:0},
+ {q:'من نبينا؟',o:[O('محمد ﷺ','🌹'),O('أحمد المعلم','👤'),O('فارس','👤')],a:0},
+ {q:'ما الكتاب الذي أُنزل علينا؟',p:['quran','📖'],o:[O('القرآن الكريم','📖','quran'),O('كتاب القصص','📕'),O('كتاب التلوين','🖍️')],a:0}])},
+{t:'أيام الأسبوع',i:'calendar',f:()=>quiz('أيام الأسبوع',[
+ {q:'كم عدد أيام الأسبوع؟',o:[O('٧','7️⃣'),O('٥','5️⃣'),O('٦','6️⃣')],a:0},
+ {q:'ما هو اليوم؟ اختَر أي يوم من أيام الأسبوع',o:DAYS.map((day,i)=>O(day,`${i+1}️⃣`)),anyCorrect:true},
+ {q:'ما هي السنة الحالية؟',o:[O(`ميلادي: ${today.getFullYear()}`,'📅'),O(`هجري: ${new Intl.DateTimeFormat('ar-SA-u-ca-islamic', {year:'numeric'}).format(today)}`,'🌙')],anyCorrect:true},
+ {q:'ما هو الشهر؟ اختر الشهر المناسب من الهجري أو الميلادي',o:[
+  O('يناير / محرم','🗓️'),O('فبراير / صفر','🗓️'),O('مارس / ربيع الأول','🗓️'),O('أبريل / ربيع الآخر','🗓️'),
+  O('مايو / جمادى الأولى','🗓️'),O('يونيو / جمادى الآخرة','🗓️'),O('يوليو / رجب','🗓️'),O('أغسطس / شعبان','🗓️'),
+  O('سبتمبر / رمضان','🗓️'),O('أكتوبر / شوال','🗓️'),O('نوفمبر / ذو القعدة','🗓️'),O('ديسمبر / ذو الحجة','🗓️')
+ ],anyCorrect:true},
+ {q:'ما هو اليوم من الشهر؟',o:Array.from({length:31},(_,i)=>O(String(i+1),'🔢')),anyCorrect:true}],
+ ()=>seq('أيام الأسبوع',DAYS.map(t=>({t,e:'📆'})),()=>fin('أيام الأسبوع'),'رتّب أيام الأسبوع من الأحد'))},
+{t:'لوحة الحضور',i:'attendance',f:att},
+{t:'قوانين الفصل',i:'rules',f:()=>quiz('قوانين الفصل',[
+ {q:'وش أسوي لما المعلمة تتكلم؟',o:[O('أسمع بهدوء','👂'),O('أصارخ','📢'),O('أقوم من مكاني','🚶')],a:0},
+ {q:'وش أسوي إذا أبغى أتكلم؟',o:[O('أرفع يدي','✋'),O('أصارخ','📢'),O('أسكت وأزعل','😠')],a:0},
+ {q:'كيف أتعامل مع أصدقائي؟',o:[O('بلطف واحترام','🤝'),O('أضربهم','👊'),O('أتجاهلهم','🙈')],a:0},
+ {q:'وين أرمي الأوراق؟',o:[O('في سلة المهملات','🗑️'),O('على الأرض','📄'),O('في الشنطة','🎒')],a:0},
+ {q:'كيف أمشي في الفصل؟',o:[O('بهدوء','🚶'),O('أركض','🏃'),O('أقفز','🤸')],a:0},
+ {q:'وش أقول للمعلمة أول ما أشوفها؟',o:[O('السلام عليكم، صباح الخير','🌞'),O('ولا شيء','🤐'),O('أهرب','🏃')],a:0}])},
+{t:'يوم جديد',i:'morning',f:()=>seq('وش أسوي بالصباح؟',[['استيقظ من النوم','🛏️'],['أذهب إلى الحمام','🚽'],['أغسل وجهي','🧼'],['أغسل يدي','🙌'],['أفرش أسناني','🪥'],['ألبس ملابس المدرسة','👔'],['آكل فطوري','🍳'],['أذهب إلى المدرسة','🚌']].map(([t,e])=>({t,e})),
+ ()=>quiz('ما اسم مدرستي؟',[{q:'ما اسم مدرستي؟',p:['school','🏫'],o:[O('مدارس العصر','🏫','school'),O('مدرسة النجوم','⭐'),O('مدرسة الأمل','🌈')],a:0}]),'رتّب خطوات الصباح من أول ما تصحى')},
+{t:'الفصل الثاني -  ٢/١',i:'classroom',f:()=>att(ST2,'الفصل الثاني -  ٢/١')}
+];
+const SECS=[{t:'القسم الأول: وطني',a:0,b:9},{t:'القسم الثاني: مدرستي',a:9,b:13},{t:'القسم الثالث: الفصل الثاني',a:13,b:G.length}];
+const GD=[
+  'اختاري السطر الصحيح لإكمال النشيد','قولي النشيد بصوتك وبراحتك','نتعرّف على وطننا الحبيب',
+  'اختاري العلم السعودي من بين الأعلام','بدّلي القطع حتى يكتمل العلم','اختاري الألوان ولوّني العلم',
+  'نتعرّف على قادة المملكة ومدينتها','رتّبي كلمات الشهادة كما تعلّمنا','نتعرّف على رموز الوطن ومعلومات دينية',
+  'نتعرّف على أيام الأسبوع والتاريخ','نحدّد الحضور والغياب معًا','نتعلّم آداب الفصل بطريقة ممتعة',
+  'رتّبي خطوات الاستعداد للمدرسة','نسجّل الحضور والغياب لفصل  ٢/١'
+];
+const MENU_ICONS={
+  anthem:'<path d="M37 45V16l17-4v28"/><circle cx="30" cy="46" r="7" class="icon-fill"/><circle cx="30" cy="46" r="7"/><ellipse cx="48" cy="41" rx="7" ry="5" class="icon-fill"/><ellipse cx="48" cy="41" rx="7" ry="5"/><path d="M13 28h5m-5 8h3m-3 8h3"/>',
+  voice:'<rect x="25" y="10" width="14" height="29" rx="7" class="icon-fill"/><rect x="25" y="10" width="14" height="29" rx="7"/><path d="M19 30v3a13 13 0 0 0 26 0v-3M32 46v8m-8 0h16M13 23l4 4m34-4-4 4"/>',
+  flag:'<path d="M18 55V10m1 3c12-8 22 7 34 0v23c-12 7-22-8-34 0" class="icon-fill"/><path d="M18 55V10m1 3c12-8 22 7 34 0v23c-12 7-22-8-34 0"/>',
+  identify:'<path d="M17 55V12m1 3c11-7 20 6 31 0v21c-11 6-20-7-31 0" class="icon-fill"/><path d="M17 55V12m1 3c11-7 20 6 31 0v21c-11 6-20-7-31 0"/><circle cx="45" cy="45" r="10" fill="#eaf5fd"/><circle cx="45" cy="45" r="10"/><path d="m41 45 3 3 6-7"/>',
+  puzzle:'<path d="M13 17h13a7 7 0 1 1 13 0h12v13a7 7 0 1 0 0 13v8H37a7 7 0 1 0-13 0H13V39a7 7 0 1 0 0-13z" class="icon-fill"/><path d="M13 17h13a7 7 0 1 1 13 0h12v13a7 7 0 1 0 0 13v8H37a7 7 0 1 0-13 0H13V39a7 7 0 1 0 0-13z"/>',
+  palette:'<path d="M32 10a22 22 0 1 0 0 44h3a5 5 0 0 0 3-9c-2-2-1-6 3-6h4a9 9 0 0 0 9-9c0-11-10-20-22-20z" class="icon-fill"/><path d="M32 10a22 22 0 1 0 0 44h3a5 5 0 0 0 3-9c-2-2-1-6 3-6h4a9 9 0 0 0 9-9c0-11-10-20-22-20z"/><circle cx="21" cy="29" r="2"/><circle cx="29" cy="20" r="2"/><circle cx="41" cy="22" r="2"/>',
+  leaders:'<path d="m14 25 10 8 8-17 8 17 10-8-4 24H18z" class="icon-fill"/><path d="m14 25 10 8 8-17 8 17 10-8-4 24H18zM18 55h28"/><circle cx="14" cy="23" r="3"/><circle cx="32" cy="14" r="3"/><circle cx="50" cy="23" r="3"/>',
+  tawheed:'<path d="M13 18c8-4 14-2 19 3 5-5 11-7 19-3v31c-8-4-14-2-19 3-5-5-11-7-19-3z" class="icon-fill"/><path d="M13 18c8-4 14-2 19 3 5-5 11-7 19-3v31c-8-4-14-2-19 3-5-5-11-7-19-3zM32 21v31M19 27h7m-7 7h7m12-7h7m-7 7h7"/>',
+  palm:'<path d="M31 34v21m-7 0h15"/><path d="M32 30c-10-8-16-2-19-9 8-1 12 0 17 5-4-10 1-15 2-20 4 7 6 12 2 20 7-8 13-7 18-7-3 7-7 11-16 12 10 1 12 7 14 12-8-1-13-3-17-11-1 9-7 11-12 14 0-8 2-13 11-18z" class="icon-fill"/><path d="M32 30c-10-8-16-2-19-9 8-1 12 0 17 5-4-10 1-15 2-20 4 7 6 12 2 20 7-8 13-7 18-7-3 7-7 11-16 12 10 1 12 7 14 12-8-1-13-3-17-11-1 9-7 11-12 14 0-8 2-13 11-18zM31 34v21m-7 0h15"/>',
+  calendar:'<rect x="12" y="16" width="40" height="37" rx="6" class="icon-fill"/><rect x="12" y="16" width="40" height="37" rx="6"/><path d="M21 11v10m22-10v10M12 27h40"/><path d="m23 39 6 6 12-12"/>',
+  attendance:'<rect x="17" y="14" width="34" height="40" rx="5" class="icon-fill"/><rect x="17" y="14" width="34" height="40" rx="5"/><path d="M26 14v-3h16v3m-17 14h17m-17 8h8m-8 8h7"/><path d="m36 40 4 4 8-10"/>',
+  rules:'<path d="M13 14h25a5 5 0 0 1 5 5v31H18a5 5 0 0 1-5-5z" class="icon-fill"/><path d="M13 14h25a5 5 0 0 1 5 5v31H18a5 5 0 0 1-5-5zM21 25h13m-13 8h13m-13 8h9"/><path d="M43 23h7a4 4 0 0 1 4 4v23h-9"/>',
+  morning:'<path d="M12 45h40M17 45a15 15 0 0 1 30 0M32 11v7m-17 0 5 5m29-5-5 5M9 34h7m32 0h7" class="icon-fill"/><path d="M12 45h40M17 45a15 15 0 0 1 30 0M32 11v7m-17 0 5 5m29-5-5 5M9 34h7m32 0h7"/>',
+  classroom:'<circle cx="24" cy="21" r="7" class="icon-fill"/><circle cx="24" cy="21" r="7"/><circle cx="43" cy="23" r="6" class="icon-fill"/><circle cx="43" cy="23" r="6"/><path d="M11 49v-5a13 13 0 0 1 26 0v5zm26 0v-5a12 12 0 0 1 16-11"/>'
+};
+const menuIcon=name=>`<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">${MENU_ICONS[name]||MENU_ICONS.flag}</svg>`;
+function home(){
+  stage.innerHTML=`<section class="welcome"><div><p class="eyebrow">مساحة تعلّم تفاعلية</p><h2>يا هلا فيك${name?` يا ${escapeHTML(name)}`:''} 👋</h2>
+    <p>ألعاب وأنشطة بسيطة تساعدنا نتعلّم عن وطننا وأيامنا ومدرستنا. اختَر لعبة وابدأ على راحتك.</p></div><div class="welcome-art" aria-hidden="true">🌟</div></section>`+
+    SECS.map((s,sectionIndex)=>`<section class="section" style="--section-index:${sectionIndex}"><h2 class="sec">${s.t}</h2><div class="grid">${G.slice(s.a,s.b).map((g,i)=>`<button class="tile" style="--tile-index:${i}" onclick="G[${s.a+i}].f()"><span class="tile-icon" aria-hidden="true">${menuIcon(g.i)}</span><span class="tile-copy"><strong>${g.t}</strong><small>${GD[s.a+i]}</small></span></button>`).join('')}</div></section>`).join('');
+  window.scrollTo(0,0);
+}
+home();
+</script>
+</body>
+</html>
