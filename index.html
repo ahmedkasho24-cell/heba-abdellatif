@@ -138,6 +138,7 @@ main { position: relative; z-index: 1; width: min(1120px, 100%); min-height: 70v
   font-size: 49px;
   animation: icon-float 4s ease-in-out infinite;
 }
+.welcome-art svg { width: 52px; height: 52px; color: var(--blue); fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .landing {
   position: relative;
   z-index: 1;
@@ -287,6 +288,8 @@ main { position: relative; z-index: 1; width: min(1120px, 100%); min-height: 70v
 .tile-copy small { color: var(--muted); font-size: 13px; font-weight: 500; transition: color .2s ease; }
 .bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 4px 0 17px; }
 .bar { animation: section-enter .38s ease-out both; }
+.home-icon { display: inline-flex; align-items: center; }
+.home-icon svg { width: 20px; height: 20px; }
 .bar h2 { flex: 1; margin: 0; color: var(--blue-deep); font-size: 25px; }
 .bk, .nxt {
   min-height: 48px;
@@ -379,6 +382,22 @@ th { background: var(--blue-soft); }
 .anthem-frame::before { position: absolute; z-index: -1; inset: -5px; border: 1px solid rgba(75, 153, 205, .25); border-radius: 26px; content: ""; }
 .anthem-title { margin: 0 0 9px; color: var(--blue-deep); text-align: center; font-size: 20px; font-weight: 800; }
 .anthem-player { display: block; width: 100%; max-height: 440px; border-radius: 15px; background: #152b3b; }
+.anthem-setup { max-width: 790px; margin: 20px auto 0; }
+.anthem-setup label { display: block; margin-bottom: 8px; color: #274c67; font-weight: 800; }
+.anthem-lines {
+  display: block;
+  width: 100%;
+  min-height: 150px;
+  padding: 13px 15px;
+  resize: vertical;
+  color: var(--ink);
+  border: 1px solid #c8ddeb;
+  border-radius: 14px;
+  background: #fbfdff;
+  font: inherit;
+}
+.anthem-setup .nxt { margin-top: 13px; }
+.anthem-character { display: block; width: min(185px, 52vw); height: 190px; margin: 12px auto; object-fit: contain; }
 #ov { position: fixed; inset: 0; z-index: 9; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(20, 46, 65, .56); }
 #ov[hidden] { display: none; }
 .ovc { width: min(460px, 100%); padding: 22px; text-align: center; border: 1px solid #d4e7f4; border-radius: 24px; background: #fff; box-shadow: 0 22px 65px rgba(10, 35, 54, .23); animation: appear .24s ease-out; }
@@ -465,6 +484,7 @@ school:'WhatsApp Image 2026-10-29 at 3.51.22 PM.jpeg',house:'',uniform:''};
 const MEDIA={anthemVideo:'saudi_anthem.mp4'};
 /* أضف هنا أسطر النشيد التي ستُستخدم في لعبة التكملة، سطرًا لكل عنصر. */
 const ANTHEM=[];
+let anthemLines=ANTHEM.slice();
 const ST=['أحمد هزازي','عبد الله الفيفي','محمد البلوي','معاذ هزازي','فارس العطوي','عبد العزيز القبلي'];
 const ST2=['أحمد عسيري','وسام السبيعي','سلطان الريثي','علي ابو الذهب','محمد البارقي','خالد العمري','عبد العزيز العطوي'];
 /* ======================================== */
@@ -488,7 +508,7 @@ const say=t=>{
   }catch(e){msg('تعذّرت القراءة الصوتية. يمكنك متابعة النشاط بالقراءة.')}
 };
 const msg=t=>{const m=$('#msg');if(m)m.textContent=t};
-const head=(t,s)=>`<div class="bar"><button class="bk" onclick="home()">🏠 القائمة</button><h2>${t}</h2>${s||''}</div>`;
+const head=(t,s)=>`<div class="bar"><button class="bk" onclick="home()"><span class="home-icon" aria-hidden="true">${menuIcon('home')}</span> القائمة</button><h2>${t}</h2>${s||''}</div>`;
 const videoFrame=()=>`<div class="anthem-frame"><p class="anthem-title">النشيد الوطني السعودي</p><video class="anthem-player" controls playsinline preload="metadata" poster="${IMG.flag}" aria-label="فيديو النشيد الوطني السعودي" src="${encodeURI(MEDIA.anthemVideo)}">متصفحك ما يدعم تشغيل الفيديو.</video></div>`;
 const bindVideoErrors=()=>stage.querySelectorAll('.anthem-player').forEach(player=>player.addEventListener('error',()=>{
   const frame=player.closest('.anthem-frame');
@@ -498,15 +518,6 @@ const bindVideoErrors=()=>stage.querySelectorAll('.anthem-player').forEach(playe
     frame.append(note);
   }
 }));
-
-const BOY=`<svg viewBox="0 0 120 150" role="img" aria-label="شخصية ولد سعودي">
-<rect x="30" y="86" width="60" height="58" rx="16" fill="#fff" stroke="#1769AA" stroke-width="3"/>
-<circle cx="60" cy="55" r="27" fill="#F2C9A0" stroke="#1769AA" stroke-width="3"/>
-<path d="M28 58Q26 18 60 18Q94 18 92 58L92 70Q86 44 60 44Q34 44 28 70Z" fill="#fff" stroke="#1769AA" stroke-width="3"/>
-<path d="M33 34Q60 20 87 34" fill="none" stroke="#222" stroke-width="6" stroke-linecap="round"/>
-<circle cx="50" cy="58" r="3.5" fill="#222"/><circle cx="70" cy="58" r="3.5" fill="#222"/>
-<path d="M50 70Q60 79 70 70" fill="none" stroke="#B3401F" stroke-width="3.5" stroke-linecap="round"/>
-<path d="M92 100L108 78" stroke="#F2C9A0" stroke-width="10" stroke-linecap="round"/></svg>`;
 
 function ok(cb,line){
   const w=name?`أحسنت يا ${escapeHTML(name)}!`:'أحسنت! أنت بطل!';
@@ -520,8 +531,8 @@ function quiz(t,qs,done,intro=''){let i=0;(function nx(){
   if(i>=qs.length)return done?done():home();
   const q=qs[i],os=shuf(q.o.map((o,j)=>({...o,r:q.anyCorrect||j===q.a})));
   stage.innerHTML=head(t,`<span class="cnt">${i+1} / ${qs.length}</span>`)+(intro||'')+
-  `<div class="card"><div class="q">${q.p?`<div class="big">${q.p.h||pic(q.p[0],q.p[1])}</div>`:''}<p>${q.q}</p><button class="sp" aria-label="اسمع السؤال" data-s="${q.q}" onclick="say(this.dataset.s)">🔊</button></div>
-  <div class="opts">${os.map((o,j)=>`<button class="opt" style="--item-index:${j}" data-j="${j}">${o.h||pic(o.k,o.e)}<b>${o.t||''}</b></button>`).join('')}</div><p id="msg" role="status"></p></div>`;
+  `<div class="card"><div class="q">${q.p?`<div class="big">${q.p.h||pic(q.p[0],q.p[1])}</div>`:''}<p>${escapeHTML(q.q)}</p><button class="sp" aria-label="اسمع السؤال" data-s="${escapeHTML(q.q)}" onclick="say(this.dataset.s)">🔊</button></div>
+  <div class="opts">${os.map((o,j)=>`<button class="opt" style="--item-index:${j}" data-j="${j}">${o.h||pic(o.k,o.e)}<b>${escapeHTML(o.t||'')}</b></button>`).join('')}</div><p id="msg" role="status"></p></div>`;
   bindVideoErrors();
   stage.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const o=os[b.dataset.j];
     if(o.r){b.classList.add('ok');ok(()=>{i++;if(i===qs.length&&!done)home();else nx()})}else{b.classList.add('no');b.disabled=true;msg('قريب! جرّب مرة ثانية 💪')}}); 
@@ -559,19 +570,32 @@ function col(){let c='#006C35';const P=['#006C35','#FFFFFF','#FFD93D','#E53935',
   $('#dn').onclick=()=>fin('لوّن العلم')}
 
 function af(){
-  const lines=ANTHEM.map(line=>line.trim()).filter(Boolean);
+  const lines=anthemLines.map(line=>line.trim()).filter(Boolean);
   if(lines.length<3){
-    stage.innerHTML=head('كمّل النشيد')+`<div class="card">${videoFrame()}<div class="q"><span class="em">🎵</span><p>لعبة تكملة النشيد جاهزة للإعداد</p></div>
-    <p class="notice">أضيفي ٣ أسطر أو أكثر في قائمة <b>ANTHEM</b> أعلى الملف، كل سطر بين علامتي اقتباس. الفيديو أعلاه يشغّل الملف المحدد في <b>MEDIA.anthemVideo</b>.</p>
+    stage.innerHTML=head('كمّل النشيد')+`<div class="card">${videoFrame()}<div class="q"><p>لعبة تكملة النشيد</p></div>
+    <div class="anthem-setup"><label for="anthem-lines">أضيفي ٣ أسطر أو أكثر من النشيد، كل سطر في سطر مستقل</label>
+    <textarea class="anthem-lines" id="anthem-lines" dir="rtl" placeholder="الصقي أسطر النشيد هنا، كل سطر لوحده"></textarea>
+    <button class="nxt" id="start-anthem-game">ابدأ لعبة التكملة</button>
+    <p class="notice">اختاري السطر الذي يأتي بعد السطر الظاهر. الأسطر المضافة تُستخدم في هذه الجولة فقط ولا تُحفظ بعد إغلاق الصفحة.</p></div>
     <p id="msg" role="status"></p></div>`;
     bindVideoErrors();
+    $('#start-anthem-game').onclick=()=>{
+      const entered=$('#anthem-lines').value.split(/\r?\n/).map(line=>line.trim()).filter(Boolean);
+      if(entered.length<3){msg('أضيفي ٣ أسطر على الأقل عشان نبدأ اللعبة.');return}
+      anthemLines=entered;
+      runAnthemGame(entered);
+    };
     return;
   }
+  runAnthemGame(lines);
+}
+function runAnthemGame(lines){
   const qs=[];for(let i=1;i<lines.length;i++){const w=shuf(lines.filter((_,j)=>j!==i&&j!==i-1)).slice(0,2);
   qs.push({q:'كمّل النشيد: '+lines[i-1],o:[{t:lines[i]},...w.map(t=>({t}))],a:0})}
-  quiz('كمّل النشيد',qs,undefined,videoFrame())}
+  quiz('كمّل النشيد',qs,undefined,videoFrame())
+}
 
-function al(){stage.innerHTML=head('أنا سامعك')+`<div class="card" style="text-align:center">${videoFrame()}<p class="q"><b>اضغط على صاحبك وقول النشيد الوطني!</b></p><button class="mas" id="mb" aria-label="اضغط على الشخصية">${BOY}</button><div class="bub" id="bb" hidden>أنا سامعك.. يلا قول النشيد! 🎤</div>
+function al(){stage.innerHTML=head('أنا سامعك')+`<div class="card" style="text-align:center">${videoFrame()}<p class="q"><b>اضغط على صاحبك وقول النشيد الوطني!</b></p><button class="mas" id="mb" aria-label="اضغط على الشخصية"><img class="anthem-character" src="chracter.png" alt="شخصية تشجّعك"></button><div class="bub" id="bb" hidden>أنا سامعك.. يلا قول النشيد!</div>
   <button class="nxt" id="en" hidden>انتهيت ✅</button></div>`;
   bindVideoErrors();
   $('#mb').onclick=()=>{$('#bb').hidden=false;$('#en').hidden=false;say('أنا سامعك، يلا قول النشيد')};
@@ -653,6 +677,7 @@ const GD=[
   'رتّبي خطوات الاستعداد للمدرسة','نسجّل الحضور والغياب لفصل  ٢/١'
 ];
 const MENU_ICONS={
+  home:'<path d="m9 29 23-19 23 19M15 25v29h34V25M26 54V38h12v16"/>',
   anthem:'<path d="M37 45V16l17-4v28"/><circle cx="30" cy="46" r="7" class="icon-fill"/><circle cx="30" cy="46" r="7"/><ellipse cx="48" cy="41" rx="7" ry="5" class="icon-fill"/><ellipse cx="48" cy="41" rx="7" ry="5"/><path d="M13 28h5m-5 8h3m-3 8h3"/>',
   voice:'<rect x="25" y="10" width="14" height="29" rx="7" class="icon-fill"/><rect x="25" y="10" width="14" height="29" rx="7"/><path d="M19 30v3a13 13 0 0 0 26 0v-3M32 46v8m-8 0h16M13 23l4 4m34-4-4 4"/>',
   flag:'<path d="M18 55V10m1 3c12-8 22 7 34 0v23c-12 7-22-8-34 0" class="icon-fill"/><path d="M18 55V10m1 3c12-8 22 7 34 0v23c-12 7-22-8-34 0"/>',
@@ -670,8 +695,8 @@ const MENU_ICONS={
 };
 const menuIcon=name=>`<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">${MENU_ICONS[name]||MENU_ICONS.flag}</svg>`;
 function home(){
-  stage.innerHTML=`<section class="welcome"><div><p class="eyebrow">مساحة تعلّم تفاعلية</p><h2>يا هلا فيك${name?` يا ${escapeHTML(name)}`:''} 👋</h2>
-    <p>ألعاب وأنشطة بسيطة تساعدنا نتعلّم عن وطننا وأيامنا ومدرستنا. اختَر لعبة وابدأ على راحتك.</p></div><div class="welcome-art" aria-hidden="true">🌟</div></section>`+
+  stage.innerHTML=`<section class="welcome"><div><p class="eyebrow">مساحة تعلّم تفاعلية</p><h2>يا هلا فيك${name?` يا ${escapeHTML(name)}`:''}</h2>
+    <p>ألعاب وأنشطة بسيطة تساعدنا نتعلّم عن وطننا وأيامنا ومدرستنا. اختَر لعبة وابدأ على راحتك.</p></div><div class="welcome-art" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="m32 7 6.8 17.2L57 31l-18.2 6.8L32 55l-6.8-17.2L7 31l18.2-6.8z"/><path d="m49 7 2.3 5.7L57 15l-5.7 2.3L49 23l-2.3-5.7L41 15l5.7-2.3z"/></svg></div></section>`+
     SECS.map((s,sectionIndex)=>`<section class="section" style="--section-index:${sectionIndex}"><h2 class="sec">${s.t}</h2><div class="grid">${G.slice(s.a,s.b).map((g,i)=>`<button class="tile" style="--tile-index:${i}" onclick="G[${s.a+i}].f()"><span class="tile-icon" aria-hidden="true">${menuIcon(g.i)}</span><span class="tile-copy"><strong>${g.t}</strong><small>${GD[s.a+i]}</small></span></button>`).join('')}</div></section>`).join('');
   window.scrollTo(0,0);
 }
