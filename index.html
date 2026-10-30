@@ -403,6 +403,9 @@ th { background: var(--blue-soft); }
 .ovc { width: min(460px, 100%); padding: 22px; text-align: center; border: 1px solid #d4e7f4; border-radius: 24px; background: #fff; box-shadow: 0 22px 65px rgba(10, 35, 54, .23); animation: appear .24s ease-out; }
 .ovc svg { width: 138px; }
 .praise-boy { display: block; width: min(154px, 42vw); height: 154px; margin: 0 auto 8px; object-fit: contain; animation: icon-float 2.8s ease-in-out infinite; }
+.praise-audio { display: block; width: min(300px, 100%); height: 38px; margin: 0 auto 12px; }
+.audio-hint { min-height: 0; margin: 0 auto 10px; color: var(--muted); font-size: 13px; }
+.audio-hint:empty { display: none; }
 .ovc .bub { font-size: 23px; }
 @keyframes appear { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 footer { padding: 18px 24px; text-align: center; color: var(--muted); font-size: 14px; animation: section-enter .65s ease-out both; }
@@ -478,7 +481,7 @@ footer { padding: 18px 24px; text-align: center; color: var(--muted); font-size:
 
 <script>
 /* ====== الإعدادات: عدّل المسارات هنا ====== */
-const IMG={king:'king-sallman.jpg',prince:'mo-sallman.jpg',flag:'KSA.jpg',swords:'KSA.jpg',palm:'KSA.jpg',
+const IMG={king:'king-sallman.jpg',prince:'mo-sallman.jpg',flag:'KSA.jpg',swords:'sief.jpeg',palm:'sief.jpeg',safe:'safe.png',
 riyadh:'',jeddah:'',dammam:'',heart:'KSA.jpg',quran:'Quran.jpg',
 school:'WhatsApp Image 2026-10-29 at 3.51.22 PM.jpeg',house:'',uniform:''};
 const MEDIA={anthemVideo:'saudi_anthem.mp4'};
@@ -521,9 +524,13 @@ const bindVideoErrors=()=>stage.querySelectorAll('.anthem-player').forEach(playe
 
 function ok(cb,line){
   const w=name?`أحسنت يا ${escapeHTML(name)}!`:'أحسنت! أنت بطل!';
-  $('#ov').innerHTML=`<div class="ovc" role="dialog" aria-modal="true" aria-live="polite"><img class="praise-boy" src="chracter.png" alt="شخصية تشجّعك"><div class="bub"><b>${w}</b><br>${line||PRX[Math.floor(Math.random()*PRX.length)]}</div><button class="nxt" id="nx">التالي ◀</button></div>`;
+  $('#ov').innerHTML=`<div class="ovc" role="dialog" aria-modal="true" aria-live="polite"><img class="praise-boy" src="chracter.png" alt="شخصية تشجّعك"><audio class="praise-audio" src="audio.mp3" controls autoplay preload="auto" aria-label="صوت التشجيع"></audio><p class="audio-hint" id="audio-hint" role="status"></p><div class="bub"><b>${w}</b><br>${line||PRX[Math.floor(Math.random()*PRX.length)]}</div><button class="nxt" id="nx">التالي ◀</button></div>`;
   $('#ov').hidden=false;$('#nx').focus();
-  $('#nx').onclick=()=>{$('#ov').hidden=true;cb&&cb()};
+  const audio=$('.praise-audio'),audioHint=$('#audio-hint');
+  audio.addEventListener('error',()=>{audioHint.textContent='تعذّر تحميل صوت التشجيع. تحققي من وجود audio.mp3 بجانب index.html.'});
+  const playback=audio.play();
+  if(playback)playback.catch(()=>{audioHint.textContent='اضغطي زر التشغيل لسماع التشجيع.'});
+  $('#nx').onclick=()=>{audio.pause();audio.currentTime=0;$('#ov').hidden=true;cb&&cb()};
 }
 const fin=t=>ok(home,`خلّصت لعبة «${t}» كاملة! أنت نجم ⭐`);
 
@@ -639,7 +646,7 @@ const G=[
 {t:'رموز وديني',i:'palm',f:()=>quiz('رموز وديني',[
  {q:'ماذا يدل السيفان؟',p:['swords','⚔️'],o:[O('القوة','💪'),O('الجمال','🌸'),O('السرعة','🏃')],a:0},
  {q:'ماذا تدل النخلة؟',p:['palm','🌴'],o:[O('الرخاء والخير','🌴'),O('الخوف','😨'),O('الحزن','😢')],a:0},
- {q:'الوطن هو المكان الذي نعيش فيه.. وطني وطن؟',p:['flag','🇸🇦'],o:[O('الأمن والأمان','🛡️'),O('الخوف','😨'),O('الحزن','😢')],a:0},
+ {q:'الوطن هو المكان الذي نعيش فيه.. وطني وطن؟',p:['safe','🛡️'],o:[O('الأمن والأمان','🛡️'),O('الخوف','😨'),O('الحزن','😢')],a:0},
  {q:'أنا أحب...',p:['flag','💚'],o:[O('وطني','💚','heart'),O('الكسل','😴'),O('الزعل','😠')],a:0},
  {q:'من ربنا؟',o:[O('الله','🤲'),O('القمر','🌙'),O('الشمس','☀️')],a:0},
  {q:'ما ديننا؟',o:[O('الإسلام','🕌'),O('لا شيء','❓'),O('غير ذلك','❓')],a:0},
